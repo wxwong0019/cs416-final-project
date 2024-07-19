@@ -1,0 +1,22 @@
+body {
+    font-family: Arial, sans-serif;
+  }
+  
+  #visualization {
+    margin: 0 auto;
+    width: 800px;
+    height: 600px;
+  }
+  
+  text {
+    font-size: 24px;
+    fill: #333;
+  }
+  
+  .line {
+    stroke-width: 2px;
+  }
+  .country-line { 
+    fill: none; 
+    stroke-width: 2px; 
+  }
