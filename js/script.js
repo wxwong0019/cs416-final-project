@@ -44,7 +44,7 @@ svg.append("text")
 const line = d3.line()
     .x(d => xScale(d.year))
     .y(d => yScale(d.value))
-    .curve(d3.curveLinear);  // Use linear interpolation
+    .curve(d3.curveMonotoneX);  // Monotone curve interpolation
 // Load the data
 d3.csv('data/lex.csv').then(rawData => {
     console.log("Raw data loaded:", rawData);
@@ -133,6 +133,8 @@ d3.csv('data/lex.csv').then(rawData => {
             .data(scene.countries)
             .join("path")
             .attr("class", "country-line")
+            .transition()  // Add transition
+            .duration(1000)  // Transition duration in milliseconds
             .attr("d", country => {
                 return line(data
                     .filter(d => d.year >= scene.yearRange[0] && d.year <= scene.yearRange[1])
@@ -140,7 +142,64 @@ d3.csv('data/lex.csv').then(rawData => {
                 );
             })
             .attr("stroke", d => colorScale(d))
-            .attr("fill", "none");  // Add this line
+            .attr("fill", "none");  // Ensure no fill
+        
+        svg.selectAll(".country-line")
+            .on("mouseover", function() {
+                d3.select(this).attr("stroke-width", 4);
+                svg.selectAll(".country-line").filter(d => d !== this.__data__)
+                    .attr("opacity", 0.2);
+            })
+            .on("mouseout", function() {
+                d3.select(this).attr("stroke-width", 2);
+                svg.selectAll(".country-line").attr("opacity", 1);
+            });
+        
+        svg.select(".legend").remove();
+            // Add new legend
+            const legend = svg.append("g")
+                .attr("class", "legend")
+                .attr("transform", `translate(${width - margin.right + 10}, ${margin.top})`);
+        
+        scene.countries.forEach((country, i) => {
+                const legendRow = legend.append("g")
+                    .attr("transform", `translate(0, ${i * 20})`);
+                
+                legendRow.append("line")
+                    .attr("x1", 0)
+                    .attr("y1", 0)
+                    .attr("x2", 20)
+                    .attr("y2", 0)
+                    .attr("stroke", colorScale(country));
+                
+                legendRow.append("text")
+                    .attr("x", 30)
+                    .attr("y", 5)
+                    .text(country);
+            });
+
+
+            svg.selectAll(".country-line")
+            .on("mouseover", function(event, d) {
+                d3.select(this).attr("stroke-width", 4);
+            })
+            .on("mousemove", function(event, d) {
+                const [x, y] = d3.pointer(event);
+                const year = Math.round(xScale.invert(x));
+                const value = data.find(item => item.year === year)[d];
+                
+                d3.select(".tooltip")
+                    .style("opacity", 1)
+                    .html(`${d}<br/>Year: ${year}<br/>Value: ${value.toFixed(2)}`)
+                    .style("left", (event.pageX + 10) + "px")
+                    .style("top", (event.pageY - 28) + "px");
+            })
+            .on("mouseout", function() {
+                d3.select(this).attr("stroke-width", 2);
+                d3.select(".tooltip").style("opacity", 0);
+            });
+
+
         // Update annotation
         svg.selectAll(".annotation").remove();
         svg.append("text")
