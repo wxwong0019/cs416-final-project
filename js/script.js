@@ -44,6 +44,7 @@ svg.append("text")
 const line = d3.line()
     .x(d => xScale(d.year))
     .y(d => yScale(d.value))
+    .defined(d => d.value && d.value > 0)
     .curve(d3.curveMonotoneX);  // Monotone curve interpolation
 // Load the data
 d3.csv('data/lex.csv').then(rawData => {
@@ -55,9 +56,15 @@ d3.csv('data/lex.csv').then(rawData => {
     
     years.forEach(year => {
         const yearData = {year: +year};
+        let hasValidData = false;
         rawData.forEach(row => {
             if (row.country) {
-                yearData[row.country] = +row[year];
+                const value = +row[year];
+                // yearData[row.country] = +row[year];
+                if (value && !isNaN(value) && value > 0) {  // Check for valid, non-zero values
+                    yearData[row.country] = value;
+                    hasValidData = true;
+                }
             }
         });
         data.push(yearData);
@@ -67,7 +74,10 @@ d3.csv('data/lex.csv').then(rawData => {
     console.log("Processed data:", data);
 
     // Define allCountries
-    const allCountries = Array.from(new Set(rawData.map(d => d.country).filter(Boolean)));
+    // const allCountries = Array.from(new Set(rawData.map(d => d.country).filter(Boolean)));
+    const allCountries = Array.from(new Set(
+        data.flatMap(d => Object.keys(d).filter(key => key !== 'year' && d[key] > 0))
+    ));
     console.log("All countries:", allCountries);
 
     // Define wwiiAffectedCountries (example selection, adjust as needed)
@@ -139,6 +149,7 @@ d3.csv('data/lex.csv').then(rawData => {
                 return line(data
                     .filter(d => d.year >= scene.yearRange[0] && d.year <= scene.yearRange[1])
                     .map(d => ({year: d.year, value: d[country]}))
+                    .filter(d => d.value && d.value > 0)
                 );
             })
             .attr("stroke", d => colorScale(d))
