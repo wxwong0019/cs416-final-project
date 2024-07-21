@@ -54,3 +54,16 @@ text {
   border-radius: 8px;
   pointer-events: none;
 }
+
+.selection {
+  stroke: none;
+  fill: #3FB8AF;
+  fill-opacity: 0.4;
+}
+
+.handle {
+  fill: #3FB8AF;
+  stroke: #2C3E50;
+  stroke-width: 1px;
+}
+

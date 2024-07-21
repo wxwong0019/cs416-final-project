@@ -103,7 +103,7 @@ d3.csv('data/lex.csv').then(rawData => {
             countries: allCountries,
             annotation: {
                 text: "Life expectancy has generally increased worldwide over the 20th century.",
-                position: {x: 1950, y: 60}
+                position: {x: 1950, y: 90}
             }
         },
         {
@@ -118,12 +118,22 @@ d3.csv('data/lex.csv').then(rawData => {
         {
             title: "Post-War Recovery",
             yearRange: [1945, 1970],
-            countries: allCountries,
+            countries: wwiiAffectedCountries,
             annotation: {
                 text: "Most countries saw rapid improvements in life expectancy after WWII.",
                 position: {x: 1960, y: 65}
             }
+        },
+        {
+            title: "Explore Yourself",
+            yearRange: [1945, 1970],
+            countries: allCountries,
+            annotation: {
+                text: "Feel Free to adjust the slider on the top of the plot to change the start/end time range",
+                position: {x: 1960, y: 85}
+            }
         }
+
     ];
 
     let currentScene = 0;
@@ -165,29 +175,6 @@ d3.csv('data/lex.csv').then(rawData => {
                 d3.select(this).attr("stroke-width", 2);
                 svg.selectAll(".country-line").attr("opacity", 1);
             });
-        
-        // svg.select(".legend").remove();
-        //     // Add new legend
-        //     const legend = svg.append("g")
-        //         .attr("class", "legend")
-        //         .attr("transform", `translate(${width - margin.right + 10}, ${margin.top})`);
-        
-        // scene.countries.forEach((country, i) => {
-        //         const legendRow = legend.append("g")
-        //             .attr("transform", `translate(0, ${i * 20})`);
-                
-        //         legendRow.append("line")
-        //             .attr("x1", 0)
-        //             .attr("y1", 0)
-        //             .attr("x2", 20)
-        //             .attr("y2", 0)
-        //             .attr("stroke", colorScale(country));
-                
-        //         legendRow.append("text")
-        //             .attr("x", 30)
-        //             .attr("y", 5)
-        //             .text(country);
-        //     });
    
    
    
@@ -250,8 +237,23 @@ d3.csv('data/lex.csv').then(rawData => {
             .attr("x", xScale(scene.annotation.position.x))
             .attr("y", yScale(scene.annotation.position.y))
             .text(scene.annotation.text);
-
-           
+        
+        d3.select("#next").on("click", () => {
+            
+            if (currentScene < scenes.length - 1) {
+                currentScene++;
+                updateScene();
+                console.log("current scene : " +currentScene)
+                if (currentScene === 3 ) {
+                    enterExplorationMode();
+                }
+                if (currentScene !== 3) {
+                    d3.select("#controls").html("");
+                }
+            }  
+            
+        });
+        
     }
 
 
@@ -278,66 +280,206 @@ d3.csv('data/lex.csv').then(rawData => {
             currentScene--;
             updateScene();
         }
-    });
-    
-    d3.select("#next").on("click", () => {
-        if (currentScene < scenes.length - 1) {
-            currentScene++;
-            updateScene();
-        } else if (currentScene === scenes.length - 1) {
-            enterExplorationMode();
+        if (currentScene !== 3) {
+            d3.select("#controls").html("");
         }
     });
+    
+   
 
+    // function enterExplorationMode() {
+    //     // Remove annotation
+    //     svg.select(".annotation").remove();
+    //     d3.select("#controls").html("");
+    //     // Add country selection dropdown
+    //     const dropdown = d3.select("#controls").append("select")
+    //         .on("change", function() {
+    //             const selected = d3.select(this).property("value");
+    //             updateChart([selected]);
+    //         });
+        
+    //     dropdown.selectAll("option")
+    //         .data(allCountries)
+    //         .enter()
+    //         .append("option")
+    //         .text(d => d)
+    //         .attr("value", d => d);
+        
+    //     // // Add year range slider
+    //     // const slider = d3.select("#controls").append("input")
+    //     //     .attr("type", "range")
+    //     //     .attr("min", d3.min(data, d => d.year))
+    //     //     .attr("max", d3.max(data, d => d.year))
+    //     //     .attr("value", d3.max(data, d => d.year))
+    //     //     .style("width", "300px")
+    //     //     .on("input", function() {
+    //     //         const year = +this.value;  // Convert to number
+    //     //         updateChart(allCountries, [d3.min(data, d => d.year), year]);
+    //     //         d3.select("#year-label").text(year);
+    //     //     });
+
+    //         const sliderWidth = 300;
+    //         const sliderHeight = 50;
+    //         const minYear = d3.min(data, d => d.year);
+    //         const maxYear = d3.max(data, d => d.year);
+    //         let currentYearRange = [minYear, maxYear];
+        
+    //         const sliderScale = d3.scaleLinear()
+    //             .domain([minYear, maxYear])
+    //             .range([0, sliderWidth])
+    //             .clamp(true);
+        
+    //         const slider = d3.select("#controls").append("svg")
+    //             .attr("width", sliderWidth + 50)
+    //             .attr("height", sliderHeight);
+        
+    //         slider.append("g")
+    //             .attr("class", "x-axis")
+    //             .attr("transform", `translate(25, ${sliderHeight - 20})`)
+    //             .call(d3.axisBottom(sliderScale).tickFormat(d3.format("d")));
+        
+    //         const brush = d3.brushX()
+    //             .extent([[0, 0], [sliderWidth, sliderHeight - 20]])
+    //             .on("brush", brushed);
+        
+    //         const gBrush = slider.append("g")
+    //             .attr("class", "brush")
+    //             .attr("transform", "translate(25, 0)")
+    //             .call(brush);
+        
+    //         gBrush.call(brush.move, [0, sliderWidth]);
+        
+    //         function brushed(event) {
+    //             if (!event.sourceEvent) return; // ignore brush-by-zoom
+    //             let s = event.selection;
+    //             if (s === null) {
+    //                 s = [0, sliderWidth];
+    //                 gBrush.call(brush.move, s);
+    //             }
+    //             currentYearRange = s.map(sliderScale.invert).map(Math.round);
+    //             updateChart(allCountries, currentYearRange);
+    //         }
+
+        
+    //     // Update chart function for exploration mode
+    //     function updateChart(countries = allCountries, yearRange = [d3.min(data, d => d.year), d3.max(data, d => d.year)]) {
+    //         xScale.domain(yearRange);
+    //         svg.select(".x-axis").call(xAxis);
+            
+    //         svg.selectAll(".country-line")
+    //             .data(countries)
+    //             .join("path")
+    //             .attr("class", "country-line")
+    //             .attr("d", country => {
+    //                 return line(data
+    //                     .filter(d => d.year >= yearRange[0] && d.year <= yearRange[1])
+    //                     .map(d => ({year: d.year, value: d[country]}))
+    //                     .filter(d => d.value && d.value > 0)
+    //                 );
+    //             })
+    //             .attr("stroke", d => colorScale(d));
+    //     }
+        
+    // }
+    function clearControls() {
+        d3.select("#controls").html("");
+    }
+    // Initial render
     function enterExplorationMode() {
-        // Remove annotation
+        // Clear existing controls and annotation
+        clearControls();
         svg.select(".annotation").remove();
         
+        const controlsDiv = d3.select("#controls");
+        
+        let selectedCountries = allCountries;
+    
         // Add country selection dropdown
-        const dropdown = d3.select("#controls").append("select")
+        const dropdown = controlsDiv.append("select")
+            .style("margin-right", "10px")
             .on("change", function() {
                 const selected = d3.select(this).property("value");
-                updateChart([selected]);
+                selectedCountries = selected === "All Countries" ? allCountries : [selected];
+                updateChart(selectedCountries, currentYearRange);
             });
         
         dropdown.selectAll("option")
-            .data(allCountries)
+            .data(["All Countries", ...allCountries])
             .enter()
             .append("option")
             .text(d => d)
             .attr("value", d => d);
         
         // Add year range slider
-        const slider = d3.select("#controls").append("input")
-            .attr("type", "range")
-            .attr("min", d3.min(data, d => d.year))
-            .attr("max", d3.max(data, d => d.year))
-            .attr("value", d3.max(data, d => d.year))
-            .on("input", function() {
-                const year = this.value;
-                updateChart(null, [d3.min(data, d => d.year), +year]);
-            });
-        
+        const sliderWidth = 600;
+        const sliderHeight = 30;
+        const minYear = d3.min(data, d => d.year);
+        const maxYear = d3.max(data, d => d.year);
+        let currentYearRange = [minYear, maxYear];
+    
+        const sliderScale = d3.scaleLinear()
+            .domain([minYear, maxYear])
+            .range([0, sliderWidth])
+            .clamp(true);
+    
+        const slider = controlsDiv.append("svg")
+            .attr("width", sliderWidth + 50)
+            .attr("height", sliderHeight);
+    
+        slider.append("g")
+            .attr("class", "x-axis")
+            .attr("transform", `translate(25, ${sliderHeight - 20})`)
+            .call(d3.axisBottom(sliderScale).tickFormat(d3.format("d")));
+    
+        const brush = d3.brushX()
+            .extent([[0, 0], [sliderWidth, sliderHeight - 20]])
+            .on("brush end", brushed);
+    
+        const gBrush = slider.append("g")
+            .attr("class", "brush")
+            .attr("transform", "translate(25, 0)")
+            .call(brush);
+    
+        gBrush.call(brush.move, [0, sliderWidth]);
+    
+        function brushed(event) {
+            if (!event.sourceEvent) return; // ignore brush-by-zoom
+            let s = event.selection;
+            if (s === null) {
+                s = [0, sliderWidth];
+                gBrush.call(brush.move, s);
+            }
+            currentYearRange = s.map(sliderScale.invert).map(Math.round);
+            updateChart(selectedCountries, currentYearRange);
+        }
+    
         // Update chart function for exploration mode
-        function updateChart(countries = allCountries, yearRange = [d3.min(data, d => d.year), d3.max(data, d => d.year)]) {
+        function updateChart(countries, yearRange = [minYear, maxYear]) {
             xScale.domain(yearRange);
             svg.select(".x-axis").call(xAxis);
             
             svg.selectAll(".country-line")
-                .data(countries)
-                .join("path")
-                .attr("class", "country-line")
+                .data(countries, d => d)  // Use country name as the key
+                .join(
+                    enter => enter.append("path")
+                        .attr("class", "country-line")
+                        .attr("fill", "none"),
+                    update => update,
+                    exit => exit.remove()
+                )
                 .attr("d", country => {
                     return line(data
                         .filter(d => d.year >= yearRange[0] && d.year <= yearRange[1])
                         .map(d => ({year: d.year, value: d[country]}))
+                        .filter(d => d.value && d.value > 0)
                     );
                 })
                 .attr("stroke", d => colorScale(d));
         }
+    
+        // Initial update
+        updateChart(selectedCountries, currentYearRange);
     }
-
-    // Initial render
     updateScene();
 }).catch(error => {
     console.error("Error loading or processing the CSV file:", error);
