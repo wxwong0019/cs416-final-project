@@ -83,7 +83,7 @@ d3.csv('data/lex.csv').then(rawData => {
     // Define wwiiAffectedCountries (example selection, adjust as needed)
     const wwiiAffectedCountries = [
         "Germany", "UK", "France", "Italy", "Russia", 
-        "Poland", "Japan", "USA"
+        "Poland", "Japan", "USA", "China"
     ].filter(country => allCountries.includes(country));
     console.log("WWII affected countries:", wwiiAffectedCountries);
 
@@ -166,31 +166,63 @@ d3.csv('data/lex.csv').then(rawData => {
                 svg.selectAll(".country-line").attr("opacity", 1);
             });
         
-        svg.select(".legend").remove();
-            // Add new legend
-            const legend = svg.append("g")
-                .attr("class", "legend")
-                .attr("transform", `translate(${width - margin.right + 10}, ${margin.top})`);
+        // svg.select(".legend").remove();
+        //     // Add new legend
+        //     const legend = svg.append("g")
+        //         .attr("class", "legend")
+        //         .attr("transform", `translate(${width - margin.right + 10}, ${margin.top})`);
+        
+        // scene.countries.forEach((country, i) => {
+        //         const legendRow = legend.append("g")
+        //             .attr("transform", `translate(0, ${i * 20})`);
+                
+        //         legendRow.append("line")
+        //             .attr("x1", 0)
+        //             .attr("y1", 0)
+        //             .attr("x2", 20)
+        //             .attr("y2", 0)
+        //             .attr("stroke", colorScale(country));
+                
+        //         legendRow.append("text")
+        //             .attr("x", 30)
+        //             .attr("y", 5)
+        //             .text(country);
+        //     });
+   
+   
+   
+        d3.select(".legend-container").remove();
+
+        // Create a container for the legend
+        const legendContainer = d3.selectAll("#visualization")
+            .append("div")
+            .attr("class", "legend-container");
+        console.log("Legend container created:", document.querySelector('.legend-container'));
+        // Add new legend
+        const legend = legendContainer.append("svg")
+            .attr("class", "legend")
+            .attr("width", "100%")
+            .attr("height", scene.countries.length * 20);  // Adjust height based on number of countries
         
         scene.countries.forEach((country, i) => {
-                const legendRow = legend.append("g")
-                    .attr("transform", `translate(0, ${i * 20})`);
-                
-                legendRow.append("line")
-                    .attr("x1", 0)
-                    .attr("y1", 0)
-                    .attr("x2", 20)
-                    .attr("y2", 0)
-                    .attr("stroke", colorScale(country));
-                
-                legendRow.append("text")
-                    .attr("x", 30)
-                    .attr("y", 5)
-                    .text(country);
-            });
+            const legendRow = legend.append("g")
+                .attr("class", "legend-item")
+                .attr("transform", `translate(0, ${i * 20})`);
+        
+            legendRow.append("line")
+                .attr("x1", 0)
+                .attr("y1", 10)
+                .attr("x2", 20)
+                .attr("y2", 10)
+                .attr("stroke", colorScale(country));
+        
+            legendRow.append("text")
+                .attr("x", 30)
+                .attr("y", 15)
+                .text(country);
+        });
 
-
-            svg.selectAll(".country-line")
+        svg.selectAll(".country-line")
             .on("mouseover", function(event, d) {
                 d3.select(this).attr("stroke-width", 4);
             })
@@ -218,8 +250,28 @@ d3.csv('data/lex.csv').then(rawData => {
             .attr("x", xScale(scene.annotation.position.x))
             .attr("y", yScale(scene.annotation.position.y))
             .text(scene.annotation.text);
+
+           
     }
 
+
+
+    // Create button container
+    const buttonContainer = d3.select("#visualization")
+    .insert("div", "svg")
+    .attr("id", "navigation-buttons")
+    .style("text-align", "center")
+    .style("margin-bottom", "20px");
+
+    // Create buttons
+    buttonContainer.append("button")
+    .attr("id", "prev")
+    .text("Previous")
+    .style("margin-right", "10px");
+
+    buttonContainer.append("button")
+    .attr("id", "next")
+    .text("Next");
     // Navigation buttons
     d3.select("#prev").on("click", () => {
         if (currentScene > 0) {
@@ -227,7 +279,7 @@ d3.csv('data/lex.csv').then(rawData => {
             updateScene();
         }
     });
-
+    
     d3.select("#next").on("click", () => {
         if (currentScene < scenes.length - 1) {
             currentScene++;

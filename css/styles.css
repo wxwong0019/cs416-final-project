@@ -2,7 +2,29 @@ body {
   font-family: Arial, sans-serif;
 }
 
+#visualization .legend-container {
+  position: absolute !important;
+  right: 20px !important;
+  top: 20px !important;
+  width: 150px !important;
+  max-height: 80% !important;
+  overflow-y: auto !important;
+  background-color: rgba(0, 0, 0, 0.8) !important;
+  border: 1px solid #ccc !important;
+  border-radius: 5px !important;
+  padding: 10px !important;
+  color: white !important;
+  z-index: 1000 !important;
+}
+
+
+.legend-item {
+  margin-bottom: 5px;
+}
+
+
 #visualization {
+  position: relative;
   margin: 0 auto;
   width: 800px;
   height: 600px;
@@ -16,6 +38,7 @@ text {
 .line {
   stroke-width: 2px;
 }
+
 .country-line { 
   fill: none; 
   stroke-width: 2px; 
