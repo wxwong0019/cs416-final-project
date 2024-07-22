@@ -102,8 +102,8 @@ d3.csv('data/lex.csv').then(rawData => {
             yearRange: [1900, 2000],
             countries: allCountries,
             annotation: {
-                text: "Life expectancy has generally increased worldwide over the 20th century.",
-                position: {x: 1950, y: 90}
+                text: ["Throughout the 20th century, global life expectancy saw significant increases due", "to advancements in medicine, sanitation, and nutrition."],
+                position: {x: 1910, y: 90}
             }
         },
         {
@@ -111,26 +111,26 @@ d3.csv('data/lex.csv').then(rawData => {
             yearRange: [1935, 1950],
             countries: wwiiAffectedCountries,
             annotation: {
-                text: "WWII caused a noticeable dip in life expectancy for many countries.",
-                position: {x: 1942, y: 55}
+                text:["World War II caused a significant decline in life expectancy, ","reflecting the devastating impact of the conflict on health and survival.","Here are the nations, Axis powers (Germany, Italy, Japan)", "were opposed by the Allied Powers (led by Great Britain, the United States,"," and the Soviet Union)..","Note that Countries like UK and USA had a more constant life expectency", "Hover over the lines to see more Tool tip details for Year and Life Expectencies"],
+                position: {x: 1942, y: 95}
             }
         },
         {
             title: "Post-War Recovery",
-            yearRange: [1945, 1970],
+            yearRange: [1945, 1957],
             countries: wwiiAffectedCountries,
             annotation: {
-                text: "Most countries saw rapid improvements in life expectancy after WWII.",
-                position: {x: 1960, y: 65}
+                text: ["Following WWII, many countries experienced rapid improvements in life expectancy ","due to peace and reconstruction efforts."],
+                position: {x: 1950, y: 75}
             }
         },
         {
-            title: "Explore Yourself",
-            yearRange: [1945, 1970],
+            title: "User Exploration",
+            yearRange: [1900, 2000],
             countries: allCountries,
             annotation: {
-                text: "Feel Free to adjust the slider on the top of the plot to change the start/end time range",
-                position: {x: 1960, y: 85}
+                text: ["Explore the data by adjusting the time range slider above", "to observe changes in life expectancy over different periods.","You may also select a country from the drop down menu"],
+                position: {x: 1940, y: 90}
             }
         }
 
@@ -189,7 +189,7 @@ d3.csv('data/lex.csv').then(rawData => {
         const legend = legendContainer.append("svg")
             .attr("class", "legend")
             .attr("width", "100%")
-            .attr("height", scene.countries.length * 20);  // Adjust height based on number of countries
+            .attr("height", scene.countries.length * 20); 
         
         scene.countries.forEach((country, i) => {
             const legendRow = legend.append("g")
@@ -232,12 +232,17 @@ d3.csv('data/lex.csv').then(rawData => {
 
         // Update annotation
         svg.selectAll(".annotation").remove();
-        svg.append("text")
+        const annotation =  svg.append("text")
             .attr("class", "annotation")
             .attr("x", xScale(scene.annotation.position.x))
             .attr("y", yScale(scene.annotation.position.y))
-            .text(scene.annotation.text);
-        
+            .attr("text-anchor", "right");
+        scene.annotation.text.forEach((line, i) => {
+            annotation.append("tspan")
+                .attr("x", xScale(scene.annotation.position.x))
+                .attr("dy", i === 0 ? 0 : "1.2em")  // Add line spacing for all but the first line
+                .text(line);
+            });
         d3.select("#next").on("click", () => {
             
             if (currentScene < scenes.length - 1) {
@@ -285,102 +290,6 @@ d3.csv('data/lex.csv').then(rawData => {
         }
     });
     
-   
-
-    // function enterExplorationMode() {
-    //     // Remove annotation
-    //     svg.select(".annotation").remove();
-    //     d3.select("#controls").html("");
-    //     // Add country selection dropdown
-    //     const dropdown = d3.select("#controls").append("select")
-    //         .on("change", function() {
-    //             const selected = d3.select(this).property("value");
-    //             updateChart([selected]);
-    //         });
-        
-    //     dropdown.selectAll("option")
-    //         .data(allCountries)
-    //         .enter()
-    //         .append("option")
-    //         .text(d => d)
-    //         .attr("value", d => d);
-        
-    //     // // Add year range slider
-    //     // const slider = d3.select("#controls").append("input")
-    //     //     .attr("type", "range")
-    //     //     .attr("min", d3.min(data, d => d.year))
-    //     //     .attr("max", d3.max(data, d => d.year))
-    //     //     .attr("value", d3.max(data, d => d.year))
-    //     //     .style("width", "300px")
-    //     //     .on("input", function() {
-    //     //         const year = +this.value;  // Convert to number
-    //     //         updateChart(allCountries, [d3.min(data, d => d.year), year]);
-    //     //         d3.select("#year-label").text(year);
-    //     //     });
-
-    //         const sliderWidth = 300;
-    //         const sliderHeight = 50;
-    //         const minYear = d3.min(data, d => d.year);
-    //         const maxYear = d3.max(data, d => d.year);
-    //         let currentYearRange = [minYear, maxYear];
-        
-    //         const sliderScale = d3.scaleLinear()
-    //             .domain([minYear, maxYear])
-    //             .range([0, sliderWidth])
-    //             .clamp(true);
-        
-    //         const slider = d3.select("#controls").append("svg")
-    //             .attr("width", sliderWidth + 50)
-    //             .attr("height", sliderHeight);
-        
-    //         slider.append("g")
-    //             .attr("class", "x-axis")
-    //             .attr("transform", `translate(25, ${sliderHeight - 20})`)
-    //             .call(d3.axisBottom(sliderScale).tickFormat(d3.format("d")));
-        
-    //         const brush = d3.brushX()
-    //             .extent([[0, 0], [sliderWidth, sliderHeight - 20]])
-    //             .on("brush", brushed);
-        
-    //         const gBrush = slider.append("g")
-    //             .attr("class", "brush")
-    //             .attr("transform", "translate(25, 0)")
-    //             .call(brush);
-        
-    //         gBrush.call(brush.move, [0, sliderWidth]);
-        
-    //         function brushed(event) {
-    //             if (!event.sourceEvent) return; // ignore brush-by-zoom
-    //             let s = event.selection;
-    //             if (s === null) {
-    //                 s = [0, sliderWidth];
-    //                 gBrush.call(brush.move, s);
-    //             }
-    //             currentYearRange = s.map(sliderScale.invert).map(Math.round);
-    //             updateChart(allCountries, currentYearRange);
-    //         }
-
-        
-    //     // Update chart function for exploration mode
-    //     function updateChart(countries = allCountries, yearRange = [d3.min(data, d => d.year), d3.max(data, d => d.year)]) {
-    //         xScale.domain(yearRange);
-    //         svg.select(".x-axis").call(xAxis);
-            
-    //         svg.selectAll(".country-line")
-    //             .data(countries)
-    //             .join("path")
-    //             .attr("class", "country-line")
-    //             .attr("d", country => {
-    //                 return line(data
-    //                     .filter(d => d.year >= yearRange[0] && d.year <= yearRange[1])
-    //                     .map(d => ({year: d.year, value: d[country]}))
-    //                     .filter(d => d.value && d.value > 0)
-    //                 );
-    //             })
-    //             .attr("stroke", d => colorScale(d));
-    //     }
-        
-    // }
     function clearControls() {
         d3.select("#controls").html("");
     }
@@ -390,6 +299,21 @@ d3.csv('data/lex.csv').then(rawData => {
         clearControls();
         svg.select(".annotation").remove();
         
+        const scene = scenes[currentScene];
+        
+        svg.selectAll(".annotation").remove();
+        const annotation =  svg.append("text")
+            .attr("class", "annotation")
+            .attr("x", xScale(scene.annotation.position.x))
+            .attr("y", yScale(scene.annotation.position.y))
+            .attr("text-anchor", "right");
+        scene.annotation.text.forEach((line, i) => {
+            annotation.append("tspan")
+                .attr("x", xScale(scene.annotation.position.x))
+                .attr("dy", i === 0 ? 0 : "1.2em")  
+                .text(line);
+            });
+
         const controlsDiv = d3.select("#controls");
         
         let selectedCountries = allCountries;
@@ -413,9 +337,10 @@ d3.csv('data/lex.csv').then(rawData => {
         // Add year range slider
         const sliderWidth = 600;
         const sliderHeight = 30;
-        const minYear = d3.min(data, d => d.year);
-        const maxYear = d3.max(data, d => d.year);
-        let currentYearRange = [minYear, maxYear];
+        const minYear = 1900; 
+        const maxYear = 2024;
+        let currentYearRange = [1930, 2000];
+        
     
         const sliderScale = d3.scaleLinear()
             .domain([minYear, maxYear])
@@ -440,13 +365,13 @@ d3.csv('data/lex.csv').then(rawData => {
             .attr("transform", "translate(25, 0)")
             .call(brush);
     
-        gBrush.call(brush.move, [0, sliderWidth]);
+        gBrush.call(brush.move, [sliderScale(1930), sliderScale(2000)]);
     
         function brushed(event) {
             if (!event.sourceEvent) return; // ignore brush-by-zoom
             let s = event.selection;
             if (s === null) {
-                s = [0, sliderWidth];
+                s = [sliderScale(1930), sliderScale(2000)];
                 gBrush.call(brush.move, s);
             }
             currentYearRange = s.map(sliderScale.invert).map(Math.round);
