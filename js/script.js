@@ -105,7 +105,7 @@ d3.csv('data/lex.csv').then(rawData => {
                 text: ["Throughout the 20th century, global life expectancy saw significant increases due", "to advancements in medicine, sanitation, and nutrition."],
                 position: {x: 1910, y: 90}
             },
-            description: "This scene provides an overview of life expectancy trends across the 20th century for multiple countries. It illustrates the overall upward trajectory of life expectancy worldwide. The visualization shows a general increase in life expectancy for most countries, with some variations in the rate of improvement. This scene sets the stage for the narrative, showing viewers the big picture of how human longevity has improved over a century. It highlights differences between developed and developing nations, and points out countries that made particularly rapid progress.                                                                                                                                                                                                                                       "
+            description: "This scene provides an overview of life expectancy trends across the 20th century for multiple countries. It illustrates the overall upward trajectory of life expectancy worldwide. The visualization shows a general increase in life expectancy for most countries, with some variations in the rate of improvement. This scene sets the stage for the narrative, showing viewers the big picture of how human longevity has improved over a century. It highlights differences between developed and developing nations, and points out countries that made particularly rapid progress."
         },
         {
             title: "Impact of World War II (click next)",
@@ -115,7 +115,7 @@ d3.csv('data/lex.csv').then(rawData => {
                 text:["World War II caused a significant decline in life expectancy, ","reflecting the devastating impact of the conflict on health and survival.","Here are the nations, Axis powers (Germany, Italy, Japan)", "were opposed by the Allied Powers (led by Great Britain, the United States,"," and the Soviet Union)..","Note that Countries like UK and USA had a more constant life expectency", "Hover over the lines to see more Tool tip details for Year and Life Expectencies"],
                 position: {x: 1942, y: 95}
             },
-            description: "This scene zooms in on a crucial period in history, focusing on the years surrounding World War II. It demonstrates the significant impact of the war on life expectancy in affected countries. Viewers can observe sharp declines in life expectancy for nations directly involved in the conflict, contrasted with more stable trends in countries less affected by the war. This scene underscores how major historical events can have profound and immediate effects on population health and longevity. It also highlights differences in the war's impact across various countries.                                                                                                                                                                                                                                       "
+            description: "This scene zooms in on a crucial period in history, focusing on the years surrounding World War II. It demonstrates the significant impact of the war on life expectancy in affected countries. Viewers can observe sharp declines in life expectancy for nations directly involved in the conflict, contrasted with more stable trends in countries less affected by the war. This scene underscores how major historical events can have profound and immediate effects on population health and longevity. It also highlights differences in the war's impact across various countries."
         },
         {
             title: "Post-War Recovery (click next)",
@@ -135,7 +135,7 @@ d3.csv('data/lex.csv').then(rawData => {
                 text: ["Explore the data by adjusting the time range slider above", "to observe changes in life expectancy over different periods.","You may also select a country from the drop down menu"],
                 position: {x: 1940, y: 95}
             },
-            description: "Feel free to Explore the data! Use Slider to adjust time range, and use dropdown menu to drill down on individual country.                                                                                                                                                                                                                                                                                                                                                                                                                                                                              "
+            description: "Feel free to Explore the data! Use Slider to adjust time range, and use dropdown menu to drill down on individual country."
         }
 
     ];
