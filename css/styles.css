@@ -9,12 +9,13 @@ body {
   width: 150px !important;
   max-height: 80% !important;
   overflow-y: auto !important;
-  background-color: rgba(0, 0, 0, 0.8) !important;
+  background-color: rgba(250, 250, 250, 0.8) !important;
   border: 1px solid #ccc !important;
   border-radius: 5px !important;
   padding: 10px !important;
   color: white !important;
   z-index: 1000 !important;
+  left: 800px;
 }
 
 
@@ -31,7 +32,7 @@ body {
 }
 
 text {
-  font-size: 24px;
+  font-size: 12px;
   fill: #333;
 }
 
@@ -48,22 +49,30 @@ text {
   position: absolute;
   text-align: center;
   padding: 5px;
-  font: 12px sans-serif;
+  font: 18px sans-serif;
   background: lightsteelblue;
   border: 0px;
   border-radius: 8px;
   pointer-events: none;
+  z-index: 1000;
 }
 
 .selection {
   stroke: none;
-  fill: #3FB8AF;
+  fill: #3f65b8;
   fill-opacity: 0.4;
 }
 
 .handle {
-  fill: #3FB8AF;
+  fill: #3f5fb8;
   stroke: #2C3E50;
   stroke-width: 1px;
 }
 
+#scene-description {
+  margin: 20px;
+  font-size: 14px;
+  line-height: 1.5;
+  max-width: 800px;
+  bottom: 200px !important;
+}

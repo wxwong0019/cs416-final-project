@@ -98,40 +98,44 @@ d3.csv('data/lex.csv').then(rawData => {
     // Define scenes
     const scenes = [
         {
-            title: "Global Life Expectancy Trends",
+            title: "Global Life Expectancy Trends (click next)",
             yearRange: [1900, 2000],
             countries: allCountries,
             annotation: {
                 text: ["Throughout the 20th century, global life expectancy saw significant increases due", "to advancements in medicine, sanitation, and nutrition."],
                 position: {x: 1910, y: 90}
-            }
+            },
+            description: "This scene provides an overview of life expectancy trends across the 20th century for multiple countries. It illustrates the overall upward trajectory of life expectancy worldwide. The visualization shows a general increase in life expectancy for most countries, with some variations in the rate of improvement. This scene sets the stage for the narrative, showing viewers the big picture of how human longevity has improved over a century. It highlights differences between developed and developing nations, and points out countries that made particularly rapid progress.                                                                                                                                                                                                                                       "
         },
         {
-            title: "Impact of World War II",
+            title: "Impact of World War II (click next)",
             yearRange: [1935, 1950],
             countries: wwiiAffectedCountries,
             annotation: {
                 text:["World War II caused a significant decline in life expectancy, ","reflecting the devastating impact of the conflict on health and survival.","Here are the nations, Axis powers (Germany, Italy, Japan)", "were opposed by the Allied Powers (led by Great Britain, the United States,"," and the Soviet Union)..","Note that Countries like UK and USA had a more constant life expectency", "Hover over the lines to see more Tool tip details for Year and Life Expectencies"],
                 position: {x: 1942, y: 95}
-            }
+            },
+            description: "This scene zooms in on a crucial period in history, focusing on the years surrounding World War II. It demonstrates the significant impact of the war on life expectancy in affected countries. Viewers can observe sharp declines in life expectancy for nations directly involved in the conflict, contrasted with more stable trends in countries less affected by the war. This scene underscores how major historical events can have profound and immediate effects on population health and longevity. It also highlights differences in the war's impact across various countries.                                                                                                                                                                                                                                       "
         },
         {
-            title: "Post-War Recovery",
+            title: "Post-War Recovery (click next)",
             yearRange: [1945, 1957],
             countries: wwiiAffectedCountries,
             annotation: {
                 text: ["Following WWII, many countries experienced rapid improvements in life expectancy ","due to peace and reconstruction efforts."],
                 position: {x: 1950, y: 75}
-            }
+            },
+            description: "This scene explores the recovery and progress made in the decades following World War II. It shows a rapid improvement in life expectancy for many countries as they rebuilt after the war. This scene illustrates the acceleration of medical and public health advancements during this period, as well as the effects of economic recovery and development on population health. It also highlights divergences in recovery rates between different nations or regions, touching on themes of global inequality in health outcomes. This scene concludes the guided narrative by showing how countries rebounded from the setbacks of war and made significant strides in improving life expectancy."
         },
         {
-            title: "User Exploration",
+            title: "User Exploration (end)",
             yearRange: [1900, 2000],
             countries: allCountries,
             annotation: {
                 text: ["Explore the data by adjusting the time range slider above", "to observe changes in life expectancy over different periods.","You may also select a country from the drop down menu"],
-                position: {x: 1940, y: 90}
-            }
+                position: {x: 1940, y: 95}
+            },
+            description: "Feel free to Explore the data! Use Slider to adjust time range, and use dropdown menu to drill down on individual country.                                                                                                                                                                                                                                                                                                                                                                                                                                                                              "
         }
 
     ];
@@ -144,6 +148,9 @@ d3.csv('data/lex.csv').then(rawData => {
         // Update title
         d3.select("h1").text(scene.title);
         
+        d3.select("#scene-description")
+            .html(scene.description);
+
         // Update x-axis range
         xScale.domain(scene.yearRange);
         svg.select(".x-axis").call(xAxis);
@@ -220,7 +227,7 @@ d3.csv('data/lex.csv').then(rawData => {
                 
                 d3.select(".tooltip")
                     .style("opacity", 1)
-                    .html(`${d}<br/>Year: ${year}<br/>Value: ${value.toFixed(2)}`)
+                    .html(`${d}<br/>Year: ${year}<br/>Life Expectancy: ${value.toFixed(2)} years`)
                     .style("left", (event.pageX + 10) + "px")
                     .style("top", (event.pageY - 28) + "px");
             })
