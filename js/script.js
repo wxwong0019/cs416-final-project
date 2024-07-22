@@ -112,8 +112,8 @@ d3.csv('data/lex.csv').then(rawData => {
             yearRange: [1935, 1950],
             countries: wwiiAffectedCountries,
             annotation: {
-                text:["World War II caused a significant decline in life expectancy, ","reflecting the devastating impact of the conflict on health and survival.","Here are the nations, Axis powers (Germany, Italy, Japan)", "were opposed by the Allied Powers (led by Great Britain, the United States,"," and the Soviet Union)..","Note that Countries like UK and USA had a more constant life expectency", "Hover over the lines to see more Tool tip details for Year and Life Expectencies"],
-                position: {x: 1942, y: 95}
+                text:["World War II caused a significant decline in life expectancy, ","reflecting the devastating impact of the conflict on health and survival."],
+                position: {x: 1940, y: 10}
             },
             description: "This scene zooms in on a crucial period in history, focusing on the years surrounding World War II. It demonstrates the significant impact of the war on life expectancy in affected countries. Viewers can observe sharp declines in life expectancy for nations directly involved in the conflict, contrasted with more stable trends in countries less affected by the war. This scene underscores how major historical events can have profound and immediate effects on population health and longevity. It also highlights differences in the war's impact across various countries."
         },
@@ -123,7 +123,7 @@ d3.csv('data/lex.csv').then(rawData => {
             countries: wwiiAffectedCountries,
             annotation: {
                 text: ["Following WWII, many countries experienced rapid improvements in life expectancy ","due to peace and reconstruction efforts."],
-                position: {x: 1950, y: 75}
+                position: {x: 1945.5, y: 75}
             },
             description: "This scene explores the recovery and progress made in the decades following World War II. It shows a rapid improvement in life expectancy for many countries as they rebuilt after the war. This scene illustrates the acceleration of medical and public health advancements during this period, as well as the effects of economic recovery and development on population health. It also highlights divergences in recovery rates between different nations or regions, touching on themes of global inequality in health outcomes. This scene concludes the guided narrative by showing how countries rebounded from the setbacks of war and made significant strides in improving life expectancy."
         },
@@ -141,7 +141,13 @@ d3.csv('data/lex.csv').then(rawData => {
     ];
 
     let currentScene = 0;
-
+    function updateButtonStates() {
+        const prevButton = d3.select("#prev");
+        const nextButton = d3.select("#next");
+    
+        prevButton.property("disabled", currentScene === 0);
+        nextButton.property("disabled", currentScene === scenes.length - 1);
+    }
     function updateScene() {
         const scene = scenes[currentScene];
         
@@ -265,7 +271,7 @@ d3.csv('data/lex.csv').then(rawData => {
             }  
             
         });
-        
+        updateButtonStates()
     }
 
 
